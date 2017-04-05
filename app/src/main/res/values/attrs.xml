@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="SanJiaoTextView">
+        <attr name="stv_text" format="string" />
+        <attr name="stv_text_size" format="dimension" />
+        <attr name="stv_padding" format="dimension" />
+        <attr name="stv_angel_length" format="dimension" />
+        <attr name="stv_text_color" format="color" />
+        <attr name="stv_background" format="color" />
+    </declare-styleable>
+</resources>
