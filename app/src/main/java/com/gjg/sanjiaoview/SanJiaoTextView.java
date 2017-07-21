@@ -11,6 +11,7 @@ import android.text.TextPaint;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.View;
+
 /*
     使用实例
     <beidoujf.com.sanjiao.SanJiaoTextView
@@ -24,6 +25,7 @@ import android.view.View;
        app:stv_text_size="12sp"
        app:stv_background="@color/colorPrimaryDark"/>
  */
+
 /**
  * @author gaojigong
  * @version V1.0
@@ -31,11 +33,11 @@ import android.view.View;
  * @date 17/3/28
  */
 public class SanJiaoTextView extends View {
-    private String mText;
-    private int mTextColor;
-    private float mTextSize;
-    private int mBgColor;
-    private float padding;
+    private String mText;//文字
+    private int mTextColor;//文字颜色
+    private float mTextSize;//文字大小
+    private int mBgColor;//控件背景颜色
+    private float padding;//文字与直角边的距离
 
     private Paint textPaint;
     private Paint bgPaint;
@@ -56,7 +58,7 @@ public class SanJiaoTextView extends View {
 
     public SanJiaoTextView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        final TypedArray array = context.obtainStyledAttributes(attrs,R.styleable.SanJiaoTextView,defStyleAttr,0);
+        final TypedArray array = context.obtainStyledAttributes(attrs, R.styleable.SanJiaoTextView,defStyleAttr,0);
         mText = array.getString(R.styleable.SanJiaoTextView_stv_text);
         if(TextUtils.isEmpty(mText)){
             mText = "Status";
@@ -85,12 +87,16 @@ public class SanJiaoTextView extends View {
     private void calculate() {
         Rect tRect = new Rect();
         textPaint.getTextBounds(mText,0,mText.length(),tRect);
+        //得到文字的真实宽高
         textLength = tRect.width();
         textHeight = tRect.height();
+
         if(-1 != angelLength){
-            padding = (float) ((angelLength /2*Math.sqrt(2) - textLength)/2);
+            //指定的直角边的长度，根据文字长度和直角表长度自动计算padding
+            padding = (float) ((angelLength /2 * Math.sqrt(2) - textLength)/2);
         }else{
-            angelLength = 2 * ((float) ((textLength+(2*padding)) * 1.0 / Math.sqrt(2)));
+            //如果没有指定直角长度，则根据文字长度和padding自动计算直角边长度
+            angelLength = 2* ((float) ((textLength+(2*padding)) * 1.0 / Math.sqrt(2)));
         }
     }
 
@@ -103,10 +109,15 @@ public class SanJiaoTextView extends View {
 
     private void drawText(Canvas canvas) {
         Path tPath = new Path();
+        //间距xy方向导致的便宜量
         float sqTh = (float) (padding * 1.0 / Math.sqrt(2));
+        //文字长度在xy方向上的大小
         float sqtW = (float) (textLength * 1.0 / Math.sqrt(2));
+        //文字高度的一半在xy方向上的偏移量
         float offset = (float) (textHeight/2/Math.sqrt(2));
+        //基线的起始x坐标:在基线的基础上要左移文字高度在x轴映射的长度
         float startX = angelLength /2 + sqTh - offset*2;
+        //基线的起始y坐标:在基线的基础上要下移文字高度在y轴映射的长度
         float startY = sqTh + offset*2;
         tPath.moveTo(startX,startY);
         tPath.lineTo(startX+sqtW,startY+sqtW);
